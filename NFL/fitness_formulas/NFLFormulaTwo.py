@@ -1,5 +1,5 @@
 from __future__ import division
-from NFL.NFL_Lineup_Generator import NFLLineupGenerator
+from NFL_Lineup_Generator import NFLLineupGenerator
 from NFLGeneralMultipliers import *
 import numpy
 

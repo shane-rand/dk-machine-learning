@@ -4,7 +4,7 @@ from fantasy_pros_scraper import scrape
 from CSVPlayerGather import get_all_games, get_all_players, get_all_projections
 from NFL_Player_Holder import NFLPlayerHolder
 from NFL_Lineup_Generator import NFLLineupGenerator
-from NFL.GeneticAlgorithm import GeneticAlgorithm
+from GeneticAlgorithm import GeneticAlgorithm
 from Logger import get_logger
 
 logger = get_logger()
@@ -41,4 +41,4 @@ def run(fitness_formula, week=None, iterations=9, generations=500):
     end_time = datetime.now()
     logger.info("Finished Algorithm, total time: {}".format(end_time-start_time))
 
-run(4, iterations=10)
+run(4, iterations=1)

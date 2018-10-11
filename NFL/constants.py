@@ -1,3 +1,25 @@
+import csv
+from Logger import get_logger
+
+logger = get_logger()
+
+BASE_PATH = "data/"
+
+PASS_DEFENSE_COEFFICIENTS = {}
+RUSH_DEFENSE_COEFFICIENTS = {}
+
+
+def createMatchupCoefficients():
+    file_path = BASE_PATH + "dvoa-10_14.csv"
+    with open(file_path, 'rU') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if row[0] == "rank":
+                continue
+            PASS_DEFENSE_COEFFICIENTS[row[1]] = row[8]
+            RUSH_DEFENSE_COEFFICIENTS[row[1]] = row[11]
+createMatchupCoefficients()
+
 TEAM_MATCHER = {
     'Green Bay': 'Packers',
     'Los Angeles': 'Rams',

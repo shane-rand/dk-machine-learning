@@ -1,7 +1,12 @@
 from __future__ import division
-from NFL.NFL_Lineup_Generator import NFLLineupGenerator
+from NFL_Lineup_Generator import NFLLineupGenerator
 from NFLGeneralMultipliers import *
 import numpy
+import csv
+from constants import *
+from Logger import get_logger
+
+logger = get_logger()
 
 # taking ratio between projected_points / ppg then std_dev + min projected_points
 
@@ -26,7 +31,17 @@ def get_player_score(player):
         return -100
     if player.ppg <= 5:
         return -100
-    return player.projected_points
+    matchup_coefficient = float(get_matchup_coefficient(player))
+    new_points = (player.projected_points * matchup_coefficient)
+    return new_points
+
+def get_matchup_coefficient(player):
+    coef = 0
+    if player.position == "WR" or player.position == "QB":
+        coef = PASS_DEFENSE_COEFFICIENTS[player.opponent]
+    elif player.position == "RB":
+        coef = RUSH_DEFENSE_COEFFICIENTS[player.opponent]
+    return (1 + (float(coef) / 2))
 
 def get_lineup_player_scores(lineup):
     fitness = []

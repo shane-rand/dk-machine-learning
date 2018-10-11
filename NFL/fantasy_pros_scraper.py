@@ -1,10 +1,12 @@
 import re
 import csv
 import requests
+from Logger import get_logger
 from bs4 import BeautifulSoup as BS
 import unicodedata
 
 from constants import FFPRO, POSITIONS
+logger = get_logger()
 
 def build_fp_pages(week=None, use_espn=False):
     '''
@@ -38,7 +40,7 @@ def calculate_ppr(row, pos):
     elif pos.upper() == 'TE':
         projected_score += (1 * float(row[1])) + (0.1 * float(row[2])) + (6 * float(row[3])) + (3 if float(row[2]) >= 100 else 0) + (-1 * float(row[4]))
     elif pos.upper() == 'DST':
-        points_allowed = float(row[8])
+        points_allowed = float(row[7])
         if points_allowed == 0:
             projected_score += 10
         elif points_allowed <= 6:
@@ -53,12 +55,12 @@ def calculate_ppr(row, pos):
             projected_score += -1
         else:
             projected_score += -4
-        projected_score += (1 * float(row[1])) + (2 * float(row[2])) + (2 * float(row[3])) + (6 * float(row[5])) + (2 * float(row[7]))
+        projected_score += (1 * float(row[1])) + (2 * float(row[2])) + (2 * float(row[3])) + (6 * float(row[5])) + (2 * float(row[6]))
     return row[0], round(projected_score, 2)
 
 def scrape(week):
     hold = []
-    for page in build_fp_pages(week):
+    for page in build_fp_pages(6):
         r = requests.get(page[0])
         soup = BS(r.text, 'html.parser')
         if 'espn' in page[0]:

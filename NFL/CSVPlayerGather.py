@@ -1,23 +1,32 @@
 import csv
 from NFL_Player import NFLPlayer
+from Logger import get_logger
+
+logger = get_logger()
 
 BASE_PATH = "data/"
 
 def get_all_players(file_path):
     file_path = BASE_PATH + file_path
     players = []
-    with open(file_path, 'r') as f:
+    with open(file_path, 'rU') as f:
         reader = csv.reader(f)
         for row in reader:
             if row[0] == "Position":
                 continue
-            players.append(NFLPlayer(row[1], row[5], row[0], int(row[2]), float(row[4])))
+            team = row[5]
+            game_string = row[3]
+            if team == _get_team_one(game_string):
+                opp = _get_team_two(game_string)
+            else:
+                opp = _get_team_one(game_string)
+            players.append(NFLPlayer(row[1], row[5], row[0], int(row[2]), float(row[4]), opp))
     return players
 
 def get_all_games(file_path):
     file_path = BASE_PATH + file_path
     games = []
-    with open(file_path, 'r') as f:
+    with open(file_path, 'rU') as f:
         reader = csv.reader(f)
         for row in reader:
             if row[0] == "Position":
@@ -30,7 +39,7 @@ def get_all_games(file_path):
 def get_all_projections(file_path):
     file_path = BASE_PATH + file_path
     projections = []
-    with open(file_path, 'r') as f:
+    with open(file_path, 'rU') as f:
         reader = csv.reader(f)
         for row in reader:
             if row[0] == 'playername':
@@ -52,3 +61,11 @@ def _game_parser(game_string):
     first_team = game_string.split("@")[0]
     second_team = game_string.split("@")[1].split(" ")[0]
     return (first_team, second_team)
+
+def _get_team_one(game_string):
+    first_team = game_string.split("@")[0]
+    return first_team
+
+def _get_team_two(game_string):
+    second_team = game_string.split("@")[1].split(" ")[0]
+    return second_team
